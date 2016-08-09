@@ -6,6 +6,10 @@
  * @param {string} [domainOrOptions.domain] - The project domain
  * @param {object} [domainOrOptions.token] - auth token - object with value property and optional headerOrQueryName and isQuery properties
  */
+
+// Uncomment for node
+// var fetch = require('node-fetch');
+
 var {{&className}} = (function(){
     'use strict';
 
@@ -23,36 +27,17 @@ var {{&className}} = (function(){
     }
 
     {{&className}}.prototype.request = function(method, url, parameters, body, headers, queryParameters, form, deferred){
-        var req = {
-            method: method,
-            uri: url,
-            qs: queryParameters,
-            headers: headers,
-            body: body
-        };
-        if(Object.keys(form).length > 0) {
-            req.form = form;
-        }
-        if(typeof(body) === 'object' && !(body instanceof Buffer)) {
-            req.json = true;
-        }
-        request(req, function(error, response, body){
-            if(error) {
-                deferred.reject(error);
-            } else {
-                if(/^application\/(.*\\+)?json/.test(response.headers['content-type'])) {
-                    try {
-                        body = JSON.parse(body);
-                    } catch(e) {}
-                }
-                if(response.statusCode === 204) {
-                    deferred.resolve({ response: response });
-                } else if(response.statusCode >= 200 && response.statusCode <= 299) {
-                    deferred.resolve({ response: response, body: body });
-                } else {
-                    deferred.reject({ response: response, body: body });
-                }
-            }
+
+        // TODO query params
+
+        fetch(url, {
+            method,
+            headers,
+            body: JSON.stringify(body)
+        }).then((response) => {
+            deferred.resolve(response);
+        }, (error) => {
+            deferred.reject(error);
         });
     };
 
