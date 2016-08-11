@@ -26,11 +26,20 @@ var {{&className}} = (function(){
         {{/isSecure}}
     }
 
+    function serializeQueryParams(parameters) {
+        var str = [];
+        for (var p in parameters)
+            if (parameters.hasOwnProperty(p)) {
+                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(parameters[p]));
+            }
+        return str.join("&");
+    }
+
     {{&className}}.prototype.request = function(method, url, parameters, body, headers, queryParameters, form, deferred){
+        const queryParams = serializeQueryParams(parameters);
+        const urlWithParams = url + '?' + queryParams;
 
-        // TODO query params
-
-        fetch(url, {
+        fetch(urlWithParams, {
             method,
             headers,
             body: JSON.stringify(body)
