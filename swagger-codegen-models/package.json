@@ -1,0 +1,12 @@
+{
+  "main": "bin/index.js",
+  "bin": "bin/index.js",
+  "dependencies": {
+    "lodash": "^3.10.0",
+    "swagger-client": "^2.1.1"
+  },
+  "devDependencies": {
+    "node-static": "^0.7.7",
+    "jquery"  : "2.2.3"
+  }
+}
