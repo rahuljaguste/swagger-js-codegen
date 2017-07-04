@@ -13,7 +13,20 @@
 var {{&className}} = (function(){
     'use strict';
 
-    var Q = require('q');
+    const Promise = require('bluebird');
+
+    function defer() {
+        var resolve, reject;
+        var promise = new Promise(function() {
+            resolve = arguments[0];
+            reject = arguments[1];
+            });
+            return {
+            resolve: resolve,
+            reject: reject,
+            promise: promise
+        };
+    }
 
     function {{&className}}(options){
         var domain = (typeof options === 'object') ? options.domain : options;
@@ -39,18 +52,21 @@ var {{&className}} = (function(){
         const queryParams = serializeQueryParams(parameters);
         const urlWithParams = url + '?' + queryParams;
 
-        fetch(urlWithParams, {
-            method,
-            headers,
-            body: JSON.stringify(body)
-        }).then((response) => {
-            deferred.resolve(response);
-        }, (error) => {
-            deferred.reject(error);
+    fetch(urlWithParams, {
+        method,
+        headers,
+        body: JSON.stringify(body)
+        }).then((response) => response.json())
+        .then((responseJson) => {
+         deferred.resolve(responseJson);
+        })
+        .catch((error) => {
+         deferred.reject(error);
         });
     };
 
-    {{#isSecure}}
+
+{{#isSecure}}
         /**
          * Set Token
          * @method
