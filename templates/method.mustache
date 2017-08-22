@@ -27,7 +27,7 @@
         } else if (this.token.headerOrQueryName) {
             headers[this.token.headerOrQueryName] = this.token.value;    
         } else {
-            headers['Authorization'] = 'Bearer ' + this.token.value;
+            headers['Authorization'] = this.token;
         }
     {{/isSecure}}
 
